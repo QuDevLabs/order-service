@@ -30,6 +30,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
     implementation "org.flywaydb:flyway-core:${flywayVersion}"
     implementation "org.flywaydb:flyway-database-postgresql:${flywayVersion}"
+    implementation 'org.springframework.cloud:spring-cloud-stream-binder-rabbit'
+    implementation 'org.springframework.cloud:spring-cloud-stream'
     runtimeOnly 'org.postgresql:postgresql'
     runtimeOnly 'org.postgresql:r2dbc-postgresql'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -40,6 +42,7 @@ dependencies {
     testImplementation 'org.testcontainers:r2dbc'
     testImplementation "com.squareup.okhttp3:mockwebserver:${okhttp3}"
     testImplementation "com.squareup.okhttp3:okhttp:${okhttp3}"
+    testImplementation 'org.springframework.cloud:spring-cloud-stream-test-binder'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
