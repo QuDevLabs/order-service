@@ -22,9 +22,11 @@ ext {
     set('springCloudVersion', "2025.0.1")
     set('flywayVersion', "11.8.0")
     set('okhttp3', "5.3.2")
+    set('testKeycloakVersion', "3.3.1")
 }
 
 dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
     implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
@@ -43,6 +45,8 @@ dependencies {
     testImplementation "com.squareup.okhttp3:mockwebserver:${okhttp3}"
     testImplementation "com.squareup.okhttp3:okhttp:${okhttp3}"
     testImplementation 'org.springframework.cloud:spring-cloud-stream-test-binder'
+    testImplementation "com.github.dasniko:testcontainers-keycloak:${testKeycloakVersion}"
+    testImplementation 'org.springframework.security:spring-security-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 

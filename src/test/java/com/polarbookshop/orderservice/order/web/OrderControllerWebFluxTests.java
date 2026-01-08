@@ -1,11 +1,16 @@
 package com.polarbookshop.orderservice.order.web;
 
+import com.polarbookshop.orderservice.config.SecurityConfig;
 import com.polarbookshop.orderservice.order.domain.Order;
 import com.polarbookshop.orderservice.order.domain.OrderService;
 import com.polarbookshop.orderservice.order.domain.OrderStatus;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
+import org.springframework.context.annotation.Import;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder;
+import org.springframework.security.test.web.reactive.server.SecurityMockServerConfigurers;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
@@ -14,6 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 
 @WebFluxTest(OrderController.class) // 标识该测试类主要关注Spring WebFlux组件，具体来讲，针对的是OrderController
+@Import(SecurityConfig.class)
 public class OrderControllerWebFluxTests {
 
     @Autowired
@@ -21,6 +27,12 @@ public class OrderControllerWebFluxTests {
 
     @MockitoBean
     private OrderService orderService;
+
+    /**
+     * 解码访问令牌，引用就不需要尝试调用Keycloak以获取公钥了
+     */
+    @MockitoBean
+    ReactiveJwtDecoder reactiveJwtDecoder;
 
     @Test
     void whenBookNotAvailableThenRejectOrder() {
@@ -32,6 +44,9 @@ public class OrderControllerWebFluxTests {
         ).willReturn(Mono.just(expectedOrder));
 
         webClient
+                .mutateWith(SecurityMockServerConfigurers
+                        .mockJwt()
+                        .authorities(new SimpleGrantedAuthority("ROLE_customer")))
                 .post()
                 .uri("/orders")
                 .bodyValue(orderRequest)
