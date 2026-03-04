@@ -23,6 +23,7 @@ ext {
     set('flywayVersion', "11.8.0")
     set('okhttp3', "5.3.2")
     set('testKeycloakVersion', "3.3.1")
+    set('otelVersion', "1.33.3")
 }
 
 dependencies {
@@ -34,8 +35,11 @@ dependencies {
     implementation "org.flywaydb:flyway-database-postgresql:${flywayVersion}"
     implementation 'org.springframework.cloud:spring-cloud-stream-binder-rabbit'
     implementation 'org.springframework.cloud:spring-cloud-stream'
+
     runtimeOnly 'org.postgresql:postgresql'
     runtimeOnly 'org.postgresql:r2dbc-postgresql'
+    runtimeOnly "io.opentelemetry.javaagent:opentelemetry-javaagent:${otelVersion}"
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.boot:spring-boot-testcontainers'
     testImplementation 'io.projectreactor:reactor-test'
@@ -47,6 +51,7 @@ dependencies {
     testImplementation 'org.springframework.cloud:spring-cloud-stream-test-binder'
     testImplementation "com.github.dasniko:testcontainers-keycloak:${testKeycloakVersion}"
     testImplementation 'org.springframework.security:spring-security-test'
+
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
