@@ -15,7 +15,7 @@ spring:
     password: password
     url: r2dbc:postgresql://localhost:5432/polardb_order
     pool:
-      max-create-connection-time: 2s # ??????????????
+      max-create-connection-time: 2s # 从连接池创建新连接的最大时间，单位为秒
       initial-size: 5
       max-size: 10
   flyway:
@@ -26,7 +26,7 @@ spring:
     import: "optional:configserver:"
   cloud:
     config:
-      uri: http://localhost:8888
+      uri: ${SPRING_CLOUD_CONFIG_URI:http://localhost:8888}
       request-connect-timeout: 5000 # 5s
       request-read-timeout: 5000 # 5s
       fail-fast: false # In production, set to true
@@ -49,17 +49,46 @@ spring:
           acceptOrder-out-0:
             producer:
               transacted: true # 使acceptOrder-out-0绑定支持事务
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          issuer-uri: http://localhost:8080/realms/PolarBookshop
   rabbitmq:
     host: localhost
     port: 5672
     username: user
     password: password
     connection-timeout: 5s
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8080/realms/PolarBookshop
+
+logging:
+  pattern:
+    level: "%5p [${spring.application.name},%X{trace_id},%X{span_id}]"
+
+info:
+  system: Polar Bookshop
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: bindings, configprops, env, flyway, functions, health, heapdump, info, loggers, mappings, prometheus
+  endpoint:
+    health:
+      show-details: always
+      show-components: always
+      probes:
+        enabled: true
+  info:
+    env:
+      enabled: true
+    java:
+      enabled: true
+    os:
+      enabled: true
+  metrics:
+    tags:
+      application: ${spring.application.name}
 
 polar:
   catalog-service-uri: "http://localhost:9001"

@@ -24,8 +24,8 @@ public class BookClient {
                 .retrieve() // 发送请求并获取响应
                 .bodyToMono(Book.class) // 以Mono<Book>的形式返回要检索的对象
                 .timeout(Duration.ofSeconds(3), Mono.empty())
-                .onErrorResume(WebClientResponseException.NotFound.class, ex -> Mono.empty())
+                .onErrorResume(WebClientResponseException.NotFound.class, exception -> Mono.empty())
                 .retryWhen(Retry.backoff(3, Duration.ofMillis(100)))
-                .onErrorResume(Exception.class, ex -> Mono.empty());
+                .onErrorResume(Exception.class, exception -> Mono.empty());
     }
 }

@@ -22,23 +22,29 @@ ext {
     set('springCloudVersion', "2025.0.1")
     set('flywayVersion', "11.8.0")
     set('okhttp3', "5.3.2")
-    set('testKeycloakVersion', "3.3.1")
+    set('testKeycloakVersion', "4.1.1")
     set('otelVersion', "1.33.3")
 }
 
 dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
     implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
-    implementation "org.flywaydb:flyway-core:${flywayVersion}"
+    implementation 'org.springframework.cloud:spring-cloud-starter-config'
     implementation "org.flywaydb:flyway-database-postgresql:${flywayVersion}"
     implementation 'org.springframework.cloud:spring-cloud-stream-binder-rabbit'
-    implementation 'org.springframework.cloud:spring-cloud-stream'
+    implementation 'org.springframework.retry:spring-retry'
 
+    runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
+    runtimeOnly "io.opentelemetry.javaagent:opentelemetry-javaagent:${otelVersion}"
+    runtimeOnly "org.flywaydb:flyway-core:${flywayVersion}"
     runtimeOnly 'org.postgresql:postgresql'
     runtimeOnly 'org.postgresql:r2dbc-postgresql'
-    runtimeOnly "io.opentelemetry.javaagent:opentelemetry-javaagent:${otelVersion}"
+    runtimeOnly 'org.springframework:spring-jdbc'
+
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.boot:spring-boot-testcontainers'
